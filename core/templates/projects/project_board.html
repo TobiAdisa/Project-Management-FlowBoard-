@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.name }} | FlowBoard{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb">
+    <a href="{% url 'dashboard' %}">⌂ Dashboard</a>
+    /
+    <a href="{% url 'dashboard' %}">Projects</a>
+    /
+    <strong>{{ project.name }}</strong>
+</nav>
+
+
+<section class="project-header">
+
+    <div class="project-header-info">
+
+        <h1>
+            {{ project.name }}
+
+            <span class="status-badge">Active</span>
+        </h1>
+
+        <p>{{ project.description }}</p>
+
+    </div>
+
+
+    <div class="project-header-actions">
+
+        <div class="status-filters">
+            <a href="?status=all">All</a>
+            <a href="?status=todo">To Do</a>
+            <a href="?status=in_progress">In Progress</a>
+            <a href="?status=done">Done</a>
+        </div>
+
+        <a href="{% url 'task_create' project.id %}" class="primary-button">
+            + Add Task
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="kanban-board">
+
+
+    <!-- TO DO COLUMN -->
+
+    <div class="kanban-column">
+
+        <div class="kanban-heading">
+            <h2>
+                <span class="status-dot todo-dot"></span>
+                To Do
+
+                <span class="task-count">
+                    {{ todo_tasks|length }}
+                </span>
+            </h2>
+
+            <a href="{% url 'task_create' project.id %}">+</a>
+        </div>
+
+
+        {% for task in todo_tasks %}
+
+        <article class="kanban-card">
+
+                <span class="priority-badge {{ task.priority|lower }}">
+                    {{ task.priority }} Priority
+                </span>
+
+            <h3>{{ task.title }}</h3>
+
+            <p>{{ task.description }}</p>
+
+            <div class="kanban-card-footer">
+
+                    <span>
+                        {{ task.assignee|default:"Unassigned" }}
+                    </span>
+
+                <span>
+                        ◷ {{ task.due_date|date:"M d" }}
+                    </span>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <p class="empty-column">No tasks to do.</p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- IN PROGRESS COLUMN -->
+
+    <div class="kanban-column">
+
+        <div class="kanban-heading">
+            <h2>
+                <span class="status-dot progress-dot"></span>
+                In Progress
+
+                <span class="task-count">
+                    {{ in_progress_tasks|length }}
+                </span>
+            </h2>
+
+            <a href="{% url 'task_create' project.id %}">+</a>
+        </div>
+
+
+        {% for task in in_progress_tasks %}
+
+        <article class="kanban-card in-progress-card">
+
+                <span class="priority-badge {{ task.priority|lower }}">
+                    {{ task.priority }} Priority
+                </span>
+
+            <h3>{{ task.title }}</h3>
+
+            <p>{{ task.description }}</p>
+
+            <div class="kanban-card-footer">
+
+                    <span>
+                        {{ task.assignee|default:"Unassigned" }}
+                    </span>
+
+                <span>
+                        ◷ {{ task.due_date|date:"M d" }}
+                    </span>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <p class="empty-column">No tasks in progress.</p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- DONE COLUMN -->
+
+    <div class="kanban-column">
+
+        <div class="kanban-heading">
+            <h2>
+                <span class="status-dot done-dot"></span>
+                Done
+
+                <span class="task-count">
+                    {{ done_tasks|length }}
+                </span>
+            </h2>
+
+            <a href="{% url 'task_create' project.id %}">+</a>
+        </div>
+
+
+        {% for task in done_tasks %}
+
+        <article class="kanban-card completed-card">
+
+                <span class="priority-badge completed-badge">
+                    Completed
+                </span>
+
+            <h3>{{ task.title }}</h3>
+
+            <p>{{ task.description }}</p>
+
+            <div class="kanban-card-footer">
+
+                    <span>
+                        {{ task.assignee|default:"Unassigned" }}
+                    </span>
+
+                <span>
+                        ✓ Completed
+                    </span>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <p class="empty-column">No completed tasks.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

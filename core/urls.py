@@ -1,0 +1,13 @@
+from tkinter.font import names
+
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('login/', views.home, name='login'),
+    path('password_reset/', views.password_reset, name='password_reset'),
+    path('register/', views.register, name='register'),
+
+]

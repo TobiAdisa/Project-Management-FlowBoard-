@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}FlowBoard{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="nav-brand">
+        <div class="logo-icon">
+            <span>▥</span>
+        </div>
+
+        <h2>FlowBoard</h2>
+
+        <span class="version">Django v5.0</span>
+    </div>
+
+    <div class="nav-search">
+        <input
+                type="search"
+                name="search"
+                placeholder="Search projects, tasks, or assigned team members..."
+        >
+    </div>
+
+    <div class="nav-tech">
+        &lt;/&gt; Django/HTMX Tech Overlay
+    </div>
+
+    <div class="nav-actions">
+
+        <a href="#" class="notification-icon" aria-label="Notifications">
+            ♧
+        </a>
+
+        <div class="nav-profile">
+
+            <div class="profile-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="profile-details">
+                <strong>
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </strong>
+
+                <small>
+                    @{{ request.user.username }}
+                </small>
+            </div>
+
+        </div>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+
+            <button type="submit" class="logout-button" aria-label="Log out">
+                ↪
+            </button>
+        </form>
+
+    </div>
+
+</header>
+
+<main class="main-content">
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+<script src="{% static 'js/main.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends 'accounts/base_auth.html' %}
+
+{% block title %}Sign In | FlowBoard{% endblock %}
+
+{% block content %}
+
+<div class="auth-heading">
+    <h1>Sign in to FlowBoard</h1>
+    <p>Manage your team projects and tasks efficiently</p>
+</div>
+
+<form method="POST" action="{% url 'login' %}" class="auth-form">
+
+    {% csrf_token %}
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="form-group">
+        <label for="username">USERNAME OR EMAIL</label>
+
+        <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter your username or email"
+                value="{{ request.POST.username|default:'' }}"
+                required
+        >
+    </div>
+
+    <div class="form-group">
+
+        <div class="password-heading">
+            <label for="password">PASSWORD</label>
+
+            <a href="{% url 'password_reset' %}">
+                Forgot password?
+            </a>
+        </div>
+
+        <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+        >
+
+    </div>
+
+    <div class="remember-me">
+        <input type="checkbox" name="remember_me" id="remember_me">
+
+        <label for="remember_me">
+            Remember me for 30 days
+        </label>
+    </div>
+
+    <button type="submit" class="primary-button">
+        Sign In →
+    </button>
+
+</form>
+
+<div class="auth-footer">
+    <p>
+        Don't have an account yet?
+
+        <a href="{% url 'register' %}">
+            Create an account
+        </a>
+    </p>
+</div>
+
+{% endblock %}

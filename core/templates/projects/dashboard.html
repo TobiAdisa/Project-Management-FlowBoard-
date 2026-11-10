@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | FlowBoard{% endblock %}
+
+{% block content %}
+
+<section class="welcome-card">
+
+    <div>
+        <h1>Project Overview</h1>
+
+        <p>
+            Welcome back, {{ request.user.first_name|default:request.user.username }}!
+            You have {{ pending_tasks_count }} pending tasks across
+            {{ active_projects_count }} active projects.
+        </p>
+    </div>
+
+    <a href="{% url 'project_create' %}" class="primary-button">
+        + New Project
+    </a>
+
+</section>
+
+
+<section class="statistics-grid">
+
+    <div class="stat-card">
+        <span>TOTAL ACTIVE PROJECTS</span>
+
+        <h2>{{ active_projects_count }}</h2>
+
+        <p class="success-text">↑ Active projects</p>
+    </div>
+
+    <div class="stat-card">
+        <span>TASKS DUE TODAY</span>
+
+        <h2>{{ tasks_due_today_count }}</h2>
+
+        <p class="warning-text">Tasks requiring attention</p>
+    </div>
+
+    <div class="stat-card">
+        <span>TASKS FINISHED</span>
+
+        <h2>{{ completed_tasks_count }}</h2>
+
+        <p class="success-text">Completed tasks</p>
+    </div>
+
+</section>
+
+
+<section class="projects-section">
+
+    <div class="section-heading">
+        <h2>My Active Projects</h2>
+
+        <a href="{% url 'archived_projects' %}">
+            View All Archived
+        </a>
+    </div>
+
+    <div class="project-grid">
+
+        {% for project in projects %}
+
+        <article class="project-card">
+
+            <div class="project-card-content">
+
+                    <span class="project-category">
+                        {{ project.category|default:"PROJECT" }}
+                    </span>
+
+                <h3>{{ project.name }}</h3>
+
+                <p>{{ project.description }}</p>
+
+                <div class="progress-heading">
+                    <span>Progress</span>
+                    <span>{{ project.progress }}%</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div
+                            class="progress-value"
+                            style="width: {{ project.progress }}%;"
+                    ></div>
+                </div>
+
+            </div>
+
+            <div class="project-card-footer">
+
+                    <span>
+                        Due {{ project.due_date|date:"M d" }}
+                    </span>
+
+                <a href="{% url 'project_board' project.id %}">
+                    View Board →
+                </a>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <p>You haven't created any projects yet.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<section class="tasks-section">
+
+    <div class="tasks-heading">
+
+        <div>
+            <h2>Active Tasks Overview</h2>
+            <p>Global listing of tasks across all registered projects</p>
+        </div>
+
+        <select name="project_filter">
+            <option value="">All Projects</option>
+
+            {% for project in projects %}
+            <option value="{{ project.id }}">
+                {{ project.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+    </div>
+
+
+    <table class="tasks-table">
+
+        <thead>
+        <tr>
+            <th>STATUS</th>
+            <th>TASK TITLE</th>
+            <th>PROJECT</th>
+            <th>ASSIGNEE</th>
+            <th>PRIORITY</th>
+            <th>DUE DATE</th>
+            <th>ACTIONS</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% for task in tasks %}
+
+        <tr>
+
+            <td>{{ task.status }}</td>
+
+            <td>{{ task.title }}</td>
+
+            <td>{{ task.project.name }}</td>
+
+            <td>{{ task.assignee|default:"Unassigned" }}</td>
+
+            <td>{{ task.priority }}</td>
+
+            <td>{{ task.due_date|date:"M d" }}</td>
+
+            <td>
+                <a href="{% url 'task_edit' task.id %}">Edit</a>
+                <a href="{% url 'task_delete' task.id %}">Delete</a>
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="7">No tasks available.</td>
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'accounts/base_auth.html' %}
+
+{% block title %}Create Account | FlowBoard{% endblock %}
+
+{% block content %}
+
+<div class="auth-heading">
+  <h1>Create Account</h1>
+  <p>Join FlowBoard to streamline your workflow</p>
+</div>
+
+<form method="POST" action="{% url 'register' %}" class="auth-form">
+
+  {% csrf_token %}
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="form-group">
+    <label for="username">USERNAME</label>
+
+    <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="e.g. alex_dev"
+            required
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="email">EMAIL ADDRESS</label>
+
+    <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="alex@company.com"
+            required
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="password1">PASSWORD</label>
+
+    <input
+            type="password"
+            id="password1"
+            name="password1"
+            placeholder="At least 8 characters"
+            required
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="password2">CONFIRM PASSWORD</label>
+
+    <input
+            type="password"
+            id="password2"
+            name="password2"
+            placeholder="Repeat your password"
+            required
+    >
+  </div>
+
+  <button type="submit" class="primary-button">
+    Register Account ✓
+  </button>
+
+</form>
+
+<div class="auth-footer">
+  <p>
+    Already have an account?
+
+    <a href="{% url 'login' %}">
+      Log in here
+    </a>
+  </p>
+</div>
+
+{% endblock %}
