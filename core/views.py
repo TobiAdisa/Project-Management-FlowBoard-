@@ -25,8 +25,11 @@ def register(request):
     return render(request, 'accounts/register.html')
 
 def logout(request):
+    logging.error('logout')
     if request.user.is_authenticated:
+        logging.error('user logged out')
         django_logout(request)
+    return render(request, 'accounts/login.html')
 
 def dashboard(request):
     if request.user.is_authenticated:
